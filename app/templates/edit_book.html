@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+        }
+        header {
+            background: #166534;
+            color: white;
+            padding: 22px 6%;
+        }
+        main {
+            max-width: 800px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+        .panel {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+        button {
+            padding: 12px 20px;
+            background: #166534;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .full { grid-column: 1 / -1; }
+        a { color: #166534; }
+        @media (max-width: 600px) {
+            form { grid-template-columns: 1fr; }
+            .full { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hệ thống quản lý thư viện</h1>
+    </header>
+
+    <main>
+        <p><a href="/books/">← Quay lại danh sách sách</a></p>
+
+        <section class="panel">
+            <h2>Sửa thông tin sách</h2>
+
+            <form action="/books/{{ book.id }}/edit" method="post">
+                <div>
+                    <label for="title">Tên sách</label>
+                    <input
+                        id="title"
+                        name="title"
+                        value="{{ book.title }}"
+                        maxlength="200"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="author">Tác giả</label>
+                    <input
+                        id="author"
+                        name="author"
+                        value="{{ book.author }}"
+                        maxlength="150"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="isbn">ISBN</label>
+                    <input
+                        id="isbn"
+                        name="isbn"
+                        value="{{ book.isbn or '' }}"
+                        maxlength="20"
+                    >
+                </div>
+
+                <div>
+                    <label for="category">Thể loại</label>
+                    <input
+                        id="category"
+                        name="category"
+                        value="{{ book.category or '' }}"
+                        maxlength="100"
+                    >
+                </div>
+
+                <div>
+                    <label for="quantity">Tổng số lượng</label>
+                    <input
+                        id="quantity"
+                        name="quantity"
+                        type="number"
+                        min="0"
+                        value="{{ book.quantity }}"
+                        required
+                    >
+                </div>
+
+                <div class="full">
+                    <button type="submit">Lưu thay đổi</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

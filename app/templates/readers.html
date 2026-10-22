@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #1d4ed8;
+            color: white;
+            padding: 22px 6%;
+        }
+
+        header h1 { margin: 0 0 8px; }
+        header a { color: white; }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.05);
+        }
+
+        form.add-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px 18px;
+            background: #1d4ed8;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover { background: #1e40af; }
+
+        .full { grid-column: 1 / -1; }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .empty {
+            text-align: center;
+            color: #6b7280;
+            padding: 25px;
+        }
+
+        @media (max-width: 650px) {
+            form.add-form { grid-template-columns: 1fr; }
+            .full { grid-column: auto; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Hệ thống quản lý thư viện</h1>
+        <a href="/">← Trang chủ</a>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Thêm độc giả mới</h2>
+
+            <form class="add-form" action="/readers/create" method="post">
+                <div>
+                    <label for="full_name">Họ và tên</label>
+                    <input
+                        id="full_name"
+                        name="full_name"
+                        maxlength="150"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="email">Email</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        maxlength="255"
+                    >
+                </div>
+
+                <div>
+                    <label for="phone">Số điện thoại</label>
+                    <input
+                        id="phone"
+                        name="phone"
+                        maxlength="30"
+                    >
+                </div>
+
+                <div>
+                    <label for="address">Địa chỉ</label>
+                    <input
+                        id="address"
+                        name="address"
+                    >
+                </div>
+
+                <div class="full">
+                    <button type="submit">Thêm độc giả</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Danh sách độc giả</h2>
+
+            {% if readers %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã độc giả</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for reader in readers %}
+                        <tr>
+                            <td>{{ reader.id }}</td>
+                            <td>{{ reader.full_name }}</td>
+                            <td>{{ reader.email or "—" }}</td>
+                            <td>{{ reader.phone or "—" }}</td>
+                            <td>{{ reader.address or "—" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty">
+                <p>Chưa có độc giả nào trong hệ thống.</p>
+                <p>Độc giả sẽ xuất hiện tại đây sau khi được thêm.</p>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

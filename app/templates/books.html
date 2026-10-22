@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+        }
+        header {
+            background: #166534;
+            color: white;
+            padding: 22px 6%;
+        }
+        header h1 { margin: 0 0 8px; }
+        header a { color: white; }
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.05);
+        }
+        form.add-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+        button, .button {
+            display: inline-block;
+            padding: 9px 13px;
+            border: 0;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .primary { background: #166534; }
+        .edit { background: #2563eb; }
+        .delete { background: #b91c1c; }
+        .full { grid-column: 1 / -1; }
+        .table-wrap { overflow-x: auto; }
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+        th { background: #f0fdf4; color: #166534; }
+        .empty { text-align: center; color: #6b7280; padding: 25px; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        .actions form { margin: 0; }
+        @media (max-width: 650px) {
+            form.add-form { grid-template-columns: 1fr; }
+            .full { grid-column: auto; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hệ thống quản lý thư viện</h1>
+        <a href="/">← Trang chủ</a>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Thêm sách mới</h2>
+
+            <form class="add-form" action="/books/create" method="post">
+                <div>
+                    <label for="title">Tên sách</label>
+                    <input id="title" name="title" maxlength="200" required>
+                </div>
+
+                <div>
+                    <label for="author">Tác giả</label>
+                    <input id="author" name="author" maxlength="150" required>
+                </div>
+
+                <div>
+                    <label for="isbn">ISBN</label>
+                    <input id="isbn" name="isbn" maxlength="20">
+                </div>
+
+                <div>
+                    <label for="category">Thể loại</label>
+                    <input id="category" name="category" maxlength="100">
+                </div>
+
+                <div>
+                    <label for="quantity">Số lượng</label>
+                    <input id="quantity" name="quantity"
+                           type="number" min="0" value="1" required>
+                </div>
+
+                <div class="full">
+                    <button class="primary" type="submit">Thêm sách</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Danh sách sách</h2>
+
+            {% if books %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã sách</th>
+                            <th>ISBN</th>
+                            <th>Tên sách</th>
+                            <th>Tác giả</th>
+                            <th>Thể loại</th>
+                            <th>Tổng số</th>
+                            <th>Còn lại</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td>{{ book.id }}</td>
+                            <td>{{ book.isbn or "—" }}</td>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.category or "—" }}</td>
+                            <td>{{ book.quantity }}</td>
+                            <td>{{ book.available_quantity }}</td>
+                            <td>
+                                <div class="actions">
+                                    <a class="button edit"
+                                       href="/books/{{ book.id }}/edit">Sửa</a>
+
+                                    <form action="/books/{{ book.id }}/delete"
+                                          method="post"
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa sách này không?');">
+                                        <button class="delete" type="submit">Xóa</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty">
+                <p>Thư viện hiện chưa có sách.</p>
+                <p>Sách sẽ xuất hiện tại đây sau khi được thêm vào hệ thống.</p>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
